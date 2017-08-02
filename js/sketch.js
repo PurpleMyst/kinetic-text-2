@@ -1,6 +1,6 @@
 /* jshint esnext: true, browser: true */
 
-let ball, mouseVelocity, lastMouseX, lastMouseY;
+let balls, mouseVelocity, lastMouseX, lastMouseY;
 
 class Ball {
   constructor() {
@@ -49,15 +49,18 @@ class Ball {
 function setup() {
   createCanvas(512, 512);
   angleMode(DEGREES);
-  ball = new Ball();
+  balls = [];
+  for (let i = 0; i < 10; ++i) balls.push(new Ball());
 }
 
 function draw() {
   background(0);
   stroke(255);
 
-  ball.update();
-  ball.draw();
+  balls.forEach(ball => {
+    ball.update();
+    ball.draw();
+  });
 
   if (mouseVelocity !== undefined) {
     translate(width / 2, height / 2);
@@ -75,8 +78,4 @@ function mouseMoved() {
   }
   lastMouseX = mouseX;
   lastMouseY = mouseY;
-}
-
-function mouseClicked() {
-  ball.pos = createVector(mouseX, mouseY);
 }
