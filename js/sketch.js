@@ -4,13 +4,23 @@ let ball, mouseVelocity, lastMouseX, lastMouseY;
 
 class Ball {
   constructor() {
-    this.pos = createVector(random(width), random(height));
+    this.radius = 50;
+    this.maxVelocity = 30;
+
+    do {
+      this.pos = createVector(random(width), random(height));
+    } while (this.outOfBounds());
     this.vel = createVector();
     this.acc = createVector();
 
-    this.radius = 50;
-
     this.wasHittingMouseLastFrame = false;
+  }
+
+  outOfBounds() {
+    return this.pos.x < 0 ||
+           this.pos.y < 0 ||
+           this.pos.x + this.radius > width ||
+           this.pos.y + this.radius > height;
   }
 
   update() {
@@ -23,11 +33,15 @@ class Ball {
 
     this.vel.add(this.acc);
     this.acc.mult(0);
+    this.vel.limit(this.maxVelocity);
     this.pos.add(this.vel);
     this.vel.mult(0.9); // friction
+
+    if (this.outOfBounds()) this.vel.mult(-1);
   }
 
   draw() {
+    fill(lerpColor(color(0, 255, 0), color(255, 0, 0), this.vel.mag() / this.maxVelocity));
     ellipse(this.pos.x, this.pos.y, this.radius * 2);
   }
 }
